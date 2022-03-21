@@ -4,13 +4,15 @@ namespace davidxu\summernote\assets;
 
 use yii\web\AssetBundle;
 use yii\bootstrap4\BootstrapAsset;
+use yii\web\YiiAsset;
+use Yii;
 
 class SummernoteAsset extends AssetBundle
 {
-    const BOOTSTRAP_VERSION_4   =   'bs4';
-    const BOOTSTRAP_VERSION_5   =   'bs5';
+    const BOOTSTRAP_VERSION_4 = 'bs4';
+    const BOOTSTRAP_VERSION_5 = 'bs5';
 
-    public $sourcePath = '@npm/summernote/dist/'
+    public $sourcePath = '@npm/summernote/dist/';
     public $css = [
     ];
     public $js = [
@@ -18,7 +20,8 @@ class SummernoteAsset extends AssetBundle
     public function init()
     {
         $min = YII_ENV_DEV ? '' : '.min';
-        if (isset($bsVersion = Yii::$app->param['bsVersion'] && in_array($bsVersion, [self::BOOTSTRAP_VERSION_4, BOOTSTRAP_VERSION_5])) {
+        $bsVersion = Yii::$app->params['bsVersion'];
+        if (isset($bsVersion) && in_array($bsVersion, [self::BOOTSTRAP_VERSION_4, self::BOOTSTRAP_VERSION_5]) !== null) {
             $this->css[] = 'summernote-' . $bsVersion . $min . '.css';
             $this->js[] = 'summernote-' . $bsVersion . $min . '.js';
         } else {
