@@ -2,10 +2,11 @@
 
 namespace davidxu\summernote;
 
+use davidxu\summernote\assets\CodeMirrorAsset;
+use davidxu\summernote\assets\SummernoteAsset;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\widgets\InputWidget;
-use davidxu\summernote\assets\SummernoteAsset;
 
 /**
  * Summernote Class
@@ -25,10 +26,14 @@ class Summernote extends InputWidget
      */
     public function init()
     {
+        var_dump($this->clientOptions);
         if (!isset($this->clientOptions['lang']) && Yii::$app->language !== 'en-US') {
             $this->clientOptions['lang'] = substr(Yii::$app->language, 0, 2);
         }
 
+        if (!isset($this->clientOptions['codemirror']['theme'])) {
+            $this->clientOptions['codemirror']['theme'] = 'monokai';
+        }
         $this->options = array_merge($this->defaultOptions, $this->options);
         parent::init();
     }
@@ -49,6 +54,7 @@ class Summernote extends InputWidget
     private function registerAssets()
     {
         $view = $this->getView();
+        CodeMirrorAsset::register($view)->setCodeMirrorTheme($this->clientOptions['codemirror']['theme']);
         SummernoteAsset::register($view)->setLanguage($this->clientOptions['lang']);
     }
 }
