@@ -1,3 +1,3 @@
 # yii2-summernote
 
-Виджет для yii2, c включенными ассетами и поправлеными багами в js-библетеках.
+Summernote for self use.

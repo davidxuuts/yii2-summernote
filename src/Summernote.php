@@ -1,25 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: floor12
- * Date: 2019-02-18
- * Time: 11:28
- */
 
-namespace floor12\summernote;
+namespace davidxu\summernote;
 
-use floor12\files\logic\ClassnameEncoder;
 use yii\helpers\Html;
+use yii\helpers\Json;
 use yii\widgets\InputWidget;
+use davidxu\summernote\assets\SummernoteAsset;
 
 class Summernote extends InputWidget
 {
+    
     /** @var ?string */
     public $fileField = null;
     /** @var ?string */
     public $fileModelClass = null;
     /** @var array */
     public $options = [];
+    /** @var array */
+    public $settings = [];
     /** @var array */
     public $clientOptions = [];
     /** @var array */
@@ -30,6 +28,10 @@ class Summernote extends InputWidget
      */
     public function init()
     {
+        if (!isset($this->settings['lang']) && Yii::$app->language !== 'en-US') {
+            $this->settings['lang'] = substr(Yii::$app->language, 0, 2);
+        }
+
         $this->options = array_merge($this->defaultOptions, $this->options);
         parent::init();
     }
@@ -39,24 +41,24 @@ class Summernote extends InputWidget
      */
     public function run()
     {
+        $view = $this->getView();
         $this->registerAssets();
         echo $this->hasModel()
             ? Html::activeTextarea($this->model, $this->attribute, $this->options)
             : Html::textarea($this->name, $this->value, $this->options);
-        if ($this->fileField && $this->fileModelClass) {
-            $classname = new ClassnameEncoder($this->fileModelClass);
-            $this->getView()->registerJs("summernoteParams.fileField = '{$this->fileField}'");
-            $this->getView()->registerJs("summernoteParams.fileClass = '{$classname}'");
-        } else {
-            $this->getView()->registerJs("summernoteParams.callbacks = {}");
-        }
-        $this->getView()->registerJs('jQuery( "#' . $this->options['id'] . '" ).summernote(summernoteParams);');
-
-
+        // if ($this->fileField && $this->fileModelClass) {
+        //     $classname = new ClassnameEncoder($this->fileModelClass);
+        //     $view->registerJs("summernoteParams.fileField = '{$this->fileField}'");
+        //     $view->registerJs("summernoteParams.fileClass = '{$classname}'");
+        // } else {
+        //     $view->registerJs("summernoteParams.callbacks = {}");
+        // }
+        $view->registerJs('jQuery( "#' . $this->options['id'] . '" ).summernote(Json::encode($this->settings));');
     }
 
     private function registerAssets()
     {
-        SummernoteAsset::register($this->getView());
+        $view = $this->getView();
+        SummernoteAsset::register($view)->setLanguage($this->settings['lang']);
     }
 }
