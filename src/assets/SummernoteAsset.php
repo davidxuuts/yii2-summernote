@@ -9,8 +9,8 @@ use Yii;
 
 class SummernoteAsset extends AssetBundle
 {
-    const BOOTSTRAP_VERSION_4 = 'bs4';
-    const BOOTSTRAP_VERSION_5 = 'bs5';
+    const BOOTSTRAP_VERSION_4 = '4.x';
+    const BOOTSTRAP_VERSION_5 = '5.x';
 
     public $sourcePath = '@npm/summernote/dist/';
     public $css = [
@@ -20,14 +20,15 @@ class SummernoteAsset extends AssetBundle
     public function init()
     {
         $min = YII_ENV_DEV ? '' : '.min';
-        $bsVersion = Yii::$app->params['bsVersion'];
-        if (isset($bsVersion) && in_array($bsVersion, [self::BOOTSTRAP_VERSION_4, self::BOOTSTRAP_VERSION_5]) !== null) {
-            $this->css[] = 'summernote-' . $bsVersion . $min . '.css';
-            $this->js[] = 'summernote-' . $bsVersion . $min . '.js';
-        } else {
-            $this->css[] = 'summernote' . $min . '.css';
-            $this->js[] = 'summernote' . $min . '.js';
-        }
+        $this->getBsVersion($min);
+//        $bsVersion = Yii::$app->params['bsVersion'];
+//        if (isset($bsVersion) && in_array($bsVersion, [self::BOOTSTRAP_VERSION_4, self::BOOTSTRAP_VERSION_5]) !== null) {
+//            $this->css[] = 'summernote-' . $bsVersion . $min . '.css';
+//            $this->js[] = 'summernote-' . $bsVersion . $min . '.js';
+//        } else {
+//            $this->css[] = 'summernote' . $min . '.css';
+//            $this->js[] = 'summernote' . $min . '.js';
+//        }
         parent::init();
     }
     
@@ -52,6 +53,29 @@ class SummernoteAsset extends AssetBundle
     {
         $this->{$ext}[] = YII_DEBUG ? "{$file}.{$ext}" : "{$file}.min.{$ext}";
         return $this;
+    }
+
+    /**
+     * @param string $min Use 'min' code for production environment
+     * @return void
+     */
+    private function getBsVersion($min)
+    {
+        $bsVersion = Yii::$app->params['bsVersion'];
+        if (isset($bsVersion)) {
+            if ($bsVersion === self::BOOTSTRAP_VERSION_4) {
+                $ver = 'bs4';
+            } elseif ($bsVersion === self::BOOTSTRAP_VERSION_5) {
+                $ver = 'bs5';
+            } else {
+                $ver = 'lite';
+            }
+            $this->css[] = 'summernote-' . $ver . $min . '.css';
+            $this->js[] = 'summernote-' . $ver . $min . '.js';
+        } else {
+            $this->css[] = 'summernote' . $min . '.css';
+            $this->js[] = 'summernote' . $min . '.js';
+        }
     }
 
     /**

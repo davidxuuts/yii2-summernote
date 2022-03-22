@@ -26,7 +26,6 @@ class Summernote extends InputWidget
      */
     public function init()
     {
-        var_dump($this->clientOptions);
         if (!isset($this->clientOptions['lang']) && Yii::$app->language !== 'en-US') {
             $this->clientOptions['lang'] = substr(Yii::$app->language, 0, 2);
         }
