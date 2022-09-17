@@ -2,10 +2,8 @@
 
 namespace davidxu\summernote\assets;
 
+use davidxu\base\assets\BaseAppAsset;
 use yii\web\AssetBundle;
-use yii\bootstrap4\BootstrapAsset;
-use yii\web\YiiAsset;
-use Yii;
 
 class CodeMirrorAsset extends AssetBundle
 {
@@ -18,30 +16,19 @@ class CodeMirrorAsset extends AssetBundle
         'mode/xml/xml.js',
     ];
 
-    public function setCodeMirrorTheme($theme)
+    public function setTheme($theme)
     {
         if (empty($theme) || !$theme) {
-            return $this->setAssetFile('css', "theme/monokai");
+            $this->css[] = 'theme/monikai.css';
         } else {
-            return $this->setAssetFile('css', "theme/$theme");
+            $this->css[] = 'theme/' . $theme . '.css';
         }
-    }
-
-    /**
-     * Sets a JS or CSS asset file
-     * @return $this
-     */
-    protected function setAssetFile($ext, $file)
-    {
-        $this->{$ext}[] = "{$file}.{$ext}";
-        return $this;
     }
 
     /**
      * @var array
      */
     public $depends = [
-        YiiAsset::class,
-        BootstrapAsset::class,
+        BaseAppAsset::class,
     ];
 }

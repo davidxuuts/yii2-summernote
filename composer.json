@@ -13,10 +13,13 @@
     "yii 2"
   ],
   "require": {
-    "php": ">=7.1.0",
-    "davidxu/yii2-base": "^0.1",
+    "php": ">=8.0",
+    "davidxu/yii2-base": "^1.0",
     "npm-asset/codemirror": "^5.65",
     "npm-asset/summernote": "^0.8"
+  },
+  "suggest": {
+    "npm-asset/qiniu-js": "^3.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.0"
